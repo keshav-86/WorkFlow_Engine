@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Workflow Engine UI</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+      text-align: center;
+      padding: 30px;
+    }
+
+    h1 {
+      color: #38bdf8;
+    }
+
+    .card {
+      background: #1e293b;
+      padding: 20px;
+      margin: 20px auto;
+      width: 300px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #000;
+    }
+
+    button {
+      margin: 5px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .validate { background: #22c55e; }
+    .process { background: #eab308; }
+    .done { background: #3b82f6; }
+    .reset { background: #ef4444; }
+
+    button:hover {
+      opacity: 0.8;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>🚀 Workflow Engine</h1>
+
+  <div class="card">
+    <h3>Current State</h3>
+    <p id="state">Loading...</p>
+  </div>
+
+  <div class="card">
+    <h3>Actions</h3>
+    <button class="validate" onclick="move('VALIDATE')">VALIDATE</button>
+    <button class="process" onclick="move('PROCESS')">PROCESS</button>
+    <button class="done" onclick="move('DONE')">DONE</button>
+    <br><br>
+    <button class="reset" onclick="reset()">RESET</button>
+  </div>
+
+  <div class="card">
+    <h3>History</h3>
+    <p id="history"></p>
+  </div>
+
+  <script>
+    async function getState() {
+      const res = await fetch("http://localhost:3000/state");
+      const data = await res.json();
+      document.getElementById("state").innerText = data.currentState;
+    }
+
+    async function move(state) {
+      await fetch(`http://localhost:3000/next/${state}`);
+      getState();
+      getHistory();
+    }
+
+    async function getHistory() {
+      const res = await fetch("http://localhost:3000/history");
+      const data = await res.json();
+      document.getElementById("history").innerText = data.history.join(" → ");
+    }
+
+    async function reset() {
+      await fetch("http://localhost:3000/reset");
+      getState();
+      getHistory();
+    }
+
+    // Load initial data
+    getState();
+    getHistory();
+  </script>
+
+</body>
+</html>

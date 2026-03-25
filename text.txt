@@ -105,4 +105,4 @@ real-world workflows in a simple and structured way.
 
 Ports:
 http://localhost:3000/state
-http://localhost:3000/next/VALIDATE
+  
