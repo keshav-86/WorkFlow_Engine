@@ -1,0 +1,28 @@
+# Workflow Engine Summary
+
+This project is a State Machine Workflow Engine designed to manage and validate step-by-step processes. 
+
+## 1. Goal & Concept
+The core idea is to ensure that a workflow predictably follows a valid sequence of steps. If a process tries to make an invalid move, the system will block the transition.
+
+- **State**: A step in the process (e.g., START, VALIDATE, PROCESS).
+- **Transition**: Moving from one state to another.
+- **Engine**: The centralized logic that dictates which transitions are permissible.
+
+## 2. Architecture structure
+### Backend (Node.js & Express)
+- Handles API requests and routing.
+- Holds the `stateMachine.js` engine that defines exactly which state can transition to what next state. 
+- For instance, it allows moving from `START` -> `VALIDATE` -> `PROCESS` -> `REVIEW`, etc.
+
+### Frontend (HTML/CSS/JS)
+- A visual interface (`frontend/index.html`) that allows users to interact with the engine.
+- Contains buttons for the defined transitions (e.g. `VALIDATE`, `PROCESS`, `DONE`, `ACCEPT`, `REJECT`).
+- It talks directly to the backend to request state changes, displaying real-time updates and an activity history trace.
+
+## 3. How It Works
+1. The user clicks an action button on the frontend.
+2. The HTML page sends a REST API call to the Node.js backend.
+3. The engine checks the internal rule set to see if the transition is allowed based on the *current* state.
+4. If allowed, the state updates and the frontend refreshes.
+5. If denied, the transaction is safely rejected and the state remains unchanged.
